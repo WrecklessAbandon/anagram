@@ -1,0 +1,18 @@
+[package]
+name = "anagram"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+md5 = "0.7.0"
+num_cpus = "0.2"
+hex = "0.4.3"
+time = "0.3.17"
+num-format = "0.4.3"
+
+[dependencies.async-std]
+version = "1.7.0"
+default-features = true
+features = ["std"]

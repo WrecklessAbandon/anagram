@@ -1,3 +1,11 @@
+# Build & Run
+```bash
+cargo build --release
+cp ./target/release/anagram ./ # Add the .exe suffix if you're on Windows
+./anagram # Again, add the .exe if you're on Windows
+```
+The resources/ directory must be adjacent to the anagram executable. The resources/anagram file and the resources/wordlist file are the only files that need to be in the resources directory.
+
 # My Anagram Phrase Solution
 
 1. Every word is sorted by its letters, this is how anagrams are detected. The sorted word is placed as a key in an associative container with the values as a list of the unsorted words, EG:  

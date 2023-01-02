@@ -6,17 +6,32 @@ cp ./target/release/anagram ./ # Add the .exe suffix if you're on Windows
 ```
 The resources/ directory must be adjacent to the anagram executable. The resources/anagram file and the resources/wordlist file are the only files that need to be in the resources directory.
 
-For the sake of brevity, I'll refer to "virtual cores" and "physical cores" as a processor. The applied solution will fully utilize a multi-core system. That is, if you have 32 processors available then all 32 processors will be used to find the solution.
-
-In my experiment, I used a Zen 3 5950x and utlized all 16 physical cores plus an additional 16 threads via simultaneous multithreading (SMT) for a total of 32 processors. The hard and easy solutions take less than 100 milliseconds to compute and the medium difficulty solution takes approximately 83 seconds to compute. _The more processors that are available then the faster that the solution can be computed due to the multithreading implementation of this algorithm._ The algorithm can be forced to use a single thread but the default is to use all processors available.
-
+The implementation of the solution algorithm will use as many threads & cores that are available on the system.
 
 # My Anagram Phrase Solution
 
-1. Every word is sorted by its letters, this is how anagrams are detected. The sorted word is placed as a key in an associative container with the values as a list of the unsorted words, EG:  
-"ikns":["sink", "skin"]  
+### 1. Canonical Sort & Filter the Word List
+Every word is sorted by its letters, this is how anagrams are detected. Each sorted word is used as a key in an associative container (hashmap) whose values are the original, un-sorted word, EG:
+**Sorted word:**  
+"inkns"  
+**Original words:**  
+"sink", "skin"  
+**Stored in an associative container (hashmap):**  
+"ikns": ["sink", "skin"]
 
-2. "poultry outwits ants" is sorted and stored in its own container; a hashmap. The hashmap keys are the letters without spaces and the values are the quantity of the letter, EG:  
+Duplicate words are filtered out as they are being added to the associative container. There are many ways to do this, refer to the code for implementation details.
+
+### 2. Further Filtering of the Word List
+Words that have letters which cannot be found in "Poultry Outwits Ants" are filtered out. This includes words with ' apostrophes.
+
+Words that contain more letters than what are found in "Poultry Outwits Ants" are also excluded, an example might be "Apple" where there are 2 of the letter "P" present and only 1 of the letter "P" found in the original anagram phrase.
+
+This level of filtering brings the total possible words from 99,175 down to 1,179.
+
+
+### TODO: The above is good, cleanup the bottom
+### .3 
+"poultry outwits ants" is sorted and stored in its own container; a hashmap. The hashmap keys are the letters (excluding spaces) and the values are the quantity of the letter, EG:  
 A:1  
 I:1  
 L:1  
@@ -28,7 +43,9 @@ S:2
 T:4  
 U:2  
 W:1  
-Y:1
+Y:1  
+
+
 
 3. The wordlist is filtered, only words that contain characters found in "poultry outwits ants" are preserved. Additional filtering is done based on character count. The result of the filtering is then stored in a hashmap container, which is also used to ensure that only unique entries are stored - a property of the hashmap will eliminate duplicates by only allowing the storage of unique keys.  A total of 1179 sorted anagrams is kept.
 

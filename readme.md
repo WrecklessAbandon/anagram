@@ -10,12 +10,12 @@ The implementation of the solution algorithm will use as many threads & cores th
 
 # My Anagram Phrase Solution
 
-### 1. Canonical Sort & Filter the Word List
+### 1. Canonical Sort & Initial Filtering of the Word List
 Every word is sorted by its letters, this is how anagrams are detected. Each sorted word is used as a key in an associative container (hashmap) whose values are the original, un-sorted word, EG:
-**Sorted word:**  
-"inkns"  
 **Original words:**  
 "sink", "skin"  
+**Sorted words:**  
+"inkns"  
 **Stored in an associative container (hashmap):**  
 "ikns": ["sink", "skin"]
 

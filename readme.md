@@ -15,23 +15,23 @@ Every word is sorted by its letters, this is how anagrams are detected. Each sor
 **Original words:**  
 "sink", "skin"  
 **Sorted words:**  
-"inkns"  
+"ikns"  
 **Stored in an associative container (hashmap):**  
 "ikns": ["sink", "skin"]
 
 Duplicate words are filtered out as they are being added to the associative container. There are many ways to do this, refer to the code for implementation details.
 
-### 2. Further Filtering of the Word List
+### 2. Further Filtering the Word List
 Words that have letters which cannot be found in "Poultry Outwits Ants" are filtered out. This includes words with ' apostrophes.
 
-Words that contain more letters than what are found in "Poultry Outwits Ants" are also excluded, an example might be "Apple" where there are 2 of the letter "P" present and only 1 of the letter "P" found in the original anagram phrase.
+Words that contain more letters than what are found in "Poultry Outwits Ants" are also excluded, an example might be "Apple" where there are 2 of the letter 'P' present and only 1 of the letter 'P' found in the original anagram phrase.
 
-This level of filtering brings the total possible words from 99,175 down to 1,179.
+In the above example, the sorted anagram "inks" will be filtered out of the candidates of words since the letter 'k' does not appear in the list of letters of the anagram phrase.
 
+This level of filtering brings the total possible words from 99,175 down to 1,179. The sorted words and associated words are then stored in a new container which is now the filtered word list.
 
-### TODO: The above is good, cleanup the bottom
-### .3 
-"poultry outwits ants" is sorted and stored in its own container; a hashmap. The hashmap keys are the letters (excluding spaces) and the values are the quantity of the letter, EG:  
+### 3. 
+"Poultry Outwits Ants" is sorted and stored in its own container; a hashmap. The hashmap keys are the letters (excluding spaces) and the values are the quantity of the letter, EG:  
 A:1  
 I:1  
 L:1  
@@ -45,22 +45,19 @@ U:2
 W:1  
 Y:1  
 
+Each sorted word is also stored as the same, EG:  
+"ainoosstttu":["outstations"]  
+A:1  
+L:1  
+O:2  
+P:1  
+R:1  
+T:1  
+U:1  
+W:1  
+Y:1  
 
-
-3. The wordlist is filtered, only words that contain characters found in "poultry outwits ants" are preserved. Additional filtering is done based on character count. The result of the filtering is then stored in a hashmap container, which is also used to ensure that only unique entries are stored - a property of the hashmap will eliminate duplicates by only allowing the storage of unique keys.  A total of 1179 sorted anagrams is kept.
-
-4. A hashmap is used to store the sorted anagram word and an embedded hashmap stores the character count. EG:  
-"inks":  
-I:1  
-N:1  
-K:1  
-S:1
-
-5. A list of the sorted anagrams is stored in a vector, which is further sorted by number of letters first with a secondary sort alphabetically. The larger words are at the beginning of the vector, this allows of fewer negatives when searching for words that can fit within the searched phrase. The alphabetical sorting doesn't have a practical purpose - other than to make repeated searches statistically deterministic and easier to follow by a human being. EG:  
-["ainoosstttu", "ainoosstttu", "inooprssttu", ...]
-
-6. The vector of sorted anagrams is iterated through, with the letters of each subtracted from the quantity of letters being searched for. EG:  
-"Poultry Outwits Ants" is stored in a HashMap, as seen in Step (2) above. The character count of the sorted anagram words are then repeatedly subtracted: "ainoosstttu".
+Each sorted word is then looped over the "Poultry Outwits Ants" anagram phrase and the letters from the sorted word list are subtracted:
 
 | Poultry Outwits Ants | Sorted Word | Result      |
 |:---------------------|:------------|:-----------:|
@@ -77,13 +74,42 @@ S:1
 |         W:1          |             |   W:1       |  
 |         Y:1          |             |   Y:1       |
 
-This subtraction is repeatedly done until the "Poultry Outwits Ants" character count reaches 0 and the length of the HashMap is then also 0. If the sorted word contains more characters than what is remaining, then the next word in the sorted word dictionary is selected.
+A record of the subtracted sorted word is kept:  
+**"ainoosstttu":["outstations"]**  
+It's possible that the same word can be subtracted multiple times, at that point the sorted word is recorded for each instance that is subtracted successfully.
 
-7. A series of sorted words is then present in the phrase, a permutation algorithm is applied to the list of sorted words to determine all possible arrangements of the sorted word phrase.
+The above loop is performed until the the result contains 0 letters remaining or until the word list has been exhausted.
 
-8. The sorted words in a phrase is gibberish and meaningless, however the sorted words are keys to a vector of valid words, as seen in Step (3):  
-"ikns":["sink", "skin"]  
-These words are retrieved and recursively cycled through to find all possible word combinations within the phrase, with a space put in between each word to create a valid phrase.  
+### 4. Testing the Permutations
+Once the remaining letters have reached exactly 0 instances, the words associated with each sorted word is then tested against the available MD5 checksums.
 
-9. Finally, when a phrase composed of words is given, the permutation algorithm is applied again to find all possible permutations with the set of valid words. Note that duplicate words are not given special treatment; although it could be an optimization to handle duplicate words differently, it would explode the complexity of the permutation logic.  
-Once a valid phrase is found, it's sent to the MD5 checksum comparator to determine if this phrase matches the given list of MD5 checksums.
+For example, the sorted anagram word "osttu" has 2 words associated with it: "touts" and "stout". Both words must be tested in the anagram phrase checksum, EG:  
+"printout touts yawls" and "printout stout yawls" must both be tested. The permutation of each word must be tested within the phrase.
+
+Another permutation must also be tested; the position of the word within the phrase. "printout touts yawls" has the following positional permutations:  
+printout yawls stout  
+stout printout yawls  
+yawls stout printout  
+stout yawls printout  
+yawls printout stout  
+stout yawls printout  
+printout stout yawls  
+
+There are 6 positional permutations from these 3 words. In addition to the positional permutations, the word permutations need to be substituted as well; meaning that "stout" can be replaced with "touts" and all positional permutations can be re-tested, bringing the total testing up to 12.
+
+### 5. Summary of the solution:
+Step 1 of the algorithm describes how to cononical sort and test for anagram words, duplicate words are also filtered out.
+
+Step 2 of the algorithm describes the further filtering out of words from the word list by checking for existent characters found in "Poultry Outwits Ants", reducing the total word list to 1,179 words.
+
+Step 3 of the alrogithm describes the basic looping that occurs by continuous subtraction of the number of letter instances within each word from the wordlist against the remaining number of letter instances found in "Poultry Outwits Ants".
+
+Step 4 of the algorithm describes the testing of the MD5 checksums against all possible word permutations within a valid phrase as well as all positional permutations of the words within the phrase.
+
+In summary, the algorithm is a filter, a subtraction of letter instances, permutations of an anagram word, permutations of each word within an anagram phrase, which is then finally tested against a given set of MD5 checksums.
+
+### TODO Describe: A Note on a O(N = N - 1) Optimization
+The following is an optimization for O(N = N - 1) looping. That is to say, the same word will be subtracted until it's fully exhausted from the list of anagram phrase possibilities.
+
+In the case of "Outstations", it will be subtracted once and then a new word will be subtracted repeatedly until there all letters have been subtracted in "Poultry Outwits Ants".
+

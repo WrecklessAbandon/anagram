@@ -108,8 +108,11 @@ Step 4 of the algorithm describes the testing of the MD5 checksums against all p
 
 In summary, the algorithm is a filter, a subtraction of letter instances, permutations of an anagram word, permutations of each word within an anagram phrase, which is then finally tested against a given set of MD5 checksums.
 
-### TODO Describe: A Note on a O(N = N - 1) Optimization
-The following is an optimization for O(N = N - 1) looping. That is to say, the same word will be subtracted until it's fully exhausted from the list of anagram phrase possibilities.
+### A Note on a O(N = N - 1) Optimization
+A "root word" is a word that is first subtracted from the anagram phrase of letters. It may be possible that the same word is then subtracted again from "Poultry Outwits Ants" but the words preceding the root word in the word list will not be visited again.
 
-In the case of "Outstations", it will be subtracted once and then a new word will be subtracted repeatedly until there all letters have been subtracted in "Poultry Outwits Ants".
+This is an N = N - 1 optimization and it allows for a decreasing need for computation as the word list is consumed.
 
+As a further optimization, the largest words are sorted to appear first in the word list. This allows for the fastest possible elimination of words from the word list without the need to repeatedly visit them at a high frequency.
+
+The purpose of this optimization is to reduce dead-end anagram phrase searching, where the anagram letter count never reaches 0 but the starting word is maintained.

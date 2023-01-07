@@ -108,11 +108,23 @@ Step 4 of the algorithm describes the testing of the MD5 checksums against all p
 
 In summary, the algorithm is a filter, a subtraction of letter instances, permutations of an anagram word, permutations of each word within an anagram phrase, which is then finally tested against a given set of MD5 checksums.
 
-### A Note on a O(N = N - 1) Optimization
+# Optimizations
+
+## A Note on a O(N = N - 1) optimization that was implemented
 A "root word" is a word that is first subtracted from the anagram phrase of letters. It may be possible that the same word is then subtracted again from "Poultry Outwits Ants" but the words preceding the root word in the word list will not be visited again.
 
 This is an N = N - 1 optimization and it allows for a decreasing need for computation as the word list is consumed.
 
 As a further optimization, the largest words are sorted to appear first in the word list. This allows for the fastest possible elimination of words from the word list without the need to repeatedly visit them at a high frequency.
 
-The purpose of this optimization is to reduce dead-end anagram phrase searching, where the anagram letter count never reaches 0 but the starting word is maintained.
+The purpose of this optimization is to reduce dead-end anagram phrase searching, where the anagram letter count never reaches 0 but the root word is kept. Once all possibilities that contain the root word are exhausted, the root word will never be used again.
+
+EG:
+If the root sorted word is **"ainoosstttu"** then all possible combinations using this word will be exhausted. Once exhausted, a new root word is used from the word list and **"ainoosstttu"** is never visited again in any combination.
+
+## A Note on potential optimizations
+The code has a number of implementation details that can be optimized, this is language specific (rust). Some of these details are documented in the code itself.
+
+Given how this algorithm is constructed for asynchronous searching, an optimization would be to use distributed computing to more quickly search for the anagram phrase answer. The algorithm is constructed to be thread safe on the root word.
+
+In addition to multithreading based on the root word, the subsequent words can also be given their own threads. The searching pattern can be thought of as a trie, with each node having the potential of being given its own thread for more efficient searching.

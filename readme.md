@@ -135,3 +135,11 @@ The code has a number of implementation details that can be optimized, this is l
 Given how this algorithm is constructed for asynchronous searching, an optimization would be to use distributed computing to more quickly search for the anagram phrase answer. The algorithm is constructed to be thread safe on the root word.
 
 In addition to multithreading based on the root word, the subsequent words can also be given their own threads. The searching pattern can be thought of as a trie, with each node having the potential of being given its own thread for more efficient searching.
+
+# Performance
+Performance on this algorithm is platform dependent. Here are some loose metrics on the performance of this algorithm on several different CPUs:  
+__AMD 4700u__ (8 cores / 8 threads, mobile cpu): **~12 minutes**  
+__AMD 6900hx__ (8 cores / 16 threads, mobile cpu): **~3 minutes and 40 seconds**  
+__AMD 5950X__ (16 cores / 32 threads, desktop cpu): **~83 seconds**  
+
+As you can see above, the implementation of the algorithm benefits from having more threads. The above sample set of timings is unscientific, it's primary purpose is to provide a ballpark estimate of how long the implementation takes to execute for a given type of hardware.

@@ -32,30 +32,34 @@ This level of filtering brings the total possible words from 99,175 down to 1,17
 
 ### 3. 
 "Poultry Outwits Ants" is sorted and stored in its own container; a hashmap. The hashmap keys are the letters (excluding spaces) and the values are the quantity of the letter, EG:  
-A:1  
-I:1  
-L:1  
-N:1  
-O:2  
-P:1  
-R:1  
-S:2  
-T:4  
-U:2  
-W:1  
-Y:1  
+| Letter | Count |
+|:-------|:-----:|
+|    A   |   1   |  
+|    I   |   1   |  
+|    L   |   1   |  
+|    N   |   1   |  
+|    O   |   2   |  
+|    P   |   1   |  
+|    R   |   1   |  
+|    S   |   2   |  
+|    T   |   4   |  
+|    U   |   2   |  
+|    W   |   1   |  
+|    Y   |   1   |  
 
 Each sorted word is also stored as the same, EG:  
 "ainoosstttu":["outstations"]  
-A:1  
-L:1  
-O:2  
-P:1  
-R:1  
-T:1  
-U:1  
-W:1  
-Y:1  
+| Letter | Count |
+|:-------|:-----:|
+|   A    |   1   |  
+|   L    |   1   |  
+|   O    |   2   |  
+|   P    |   1   |  
+|   R    |   1   |  
+|   T    |   1   |  
+|   U    |   1   |  
+|   W    |   1   |  
+|   Y    |   1   |  
 
 Each sorted word is then looped over the "Poultry Outwits Ants" anagram phrase and the letters from the sorted word list are subtracted:
 

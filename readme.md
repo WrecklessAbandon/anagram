@@ -140,6 +140,6 @@ In addition to multithreading based on the root word, the subsequent words can a
 Performance on this algorithm is platform dependent. Here are some loose metrics on the performance of this algorithm on several different CPUs:  
 __AMD 4700u__ (8 cores / 8 threads, mobile cpu): **~12 minutes**  
 __AMD 6900hx__ (8 cores / 16 threads, mobile cpu): **~3 minutes and 40 seconds**  
-__AMD 5950X__ (16 cores / 32 threads, desktop cpu): **~83 seconds**  
+__AMD 5950X__ (16 cores / 32 threads, desktop cpu): **~1 minute and 23 seconds**  
 
 As you can see above, the implementation of the algorithm benefits from having more threads. The above sample set of timings is unscientific, it's primary purpose is to provide a ballpark estimate of how long the implementation takes to execute for a given type of hardware.

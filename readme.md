@@ -8,6 +8,9 @@ The resources/ directory must be adjacent to the anagram executable. The resourc
 
 The implementation of the solution algorithm will use as many threads & cores that are available on the system.
 
+# Problem found here:  
+[Follow The White Rabbit](https://followthewhiterabbit.trustpilot.com/cs/step3.html)
+
 # My Anagram Phrase Solution
 
 ### 1. Canonical Sort & Initial Filtering of the Word List
